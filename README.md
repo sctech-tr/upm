@@ -27,4 +27,4 @@ cd upm
 sudo make install
 ```
 ## why it isn't in the official package manager repositories?
-there is no package manager support, because if i did that, the whole purpose will be defeated.
+there's no point
