@@ -14,9 +14,6 @@ function Show-Help {
     Write-Host "  remove <package>   - Remove a package"
     Write-Host "  update <package>   - Update a specific package"
     Write-Host "  upgrade            - Upgrade all packages"
-    Write-Host "Options:"
-    Write-Host "  -q                 - Quiet mode (reduce output)"
-    Write-Host "  -y                 - Automatically answer yes to prompts"
     exit
 }
 
@@ -62,8 +59,6 @@ function Run-Command {
         [string]$PackageManager,
         [string]$Action,
         [string]$Package,
-        [switch]$Quiet,
-        [switch]$Yes
     )
 
     $pmConfig = $config[$PackageManager]
@@ -73,9 +68,6 @@ function Run-Command {
         Write-Error "Error: Invalid action for $PackageManager."
         exit 1
     }
-
-    $quietFlag = if ($Quiet -and $pmConfig.QuietFlag) { $pmConfig.QuietFlag } else { "" }
-    $yesFlag = if ($Yes -and $pmConfig.YesFlag) { $pmConfig.YesFlag } else { "" }
 
     $cmd = $cmdTemplate -replace '\$package', $Package
     $cmd = "$($pmConfig.Command) $cmd $quietFlag $yesFlag"
@@ -92,9 +84,6 @@ param(
 
     [Parameter(Position=1)]
     [string]$Package,
-
-    [switch]$q,
-    [switch]$y
 )
 
 # Version check
@@ -115,4 +104,4 @@ if (-not $pm) {
     exit 1
 }
 
-Run-Command -PackageManager $pm -Action $Action -Package $Package -Quiet:$q -Yes:$y
+Run-Command -PackageManager $pm -Action $Action -Package $Package
