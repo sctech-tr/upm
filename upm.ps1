@@ -8,7 +8,7 @@ $config = Import-PowerShellDataFile -Path $configPath
 
 function Show-Help {
     Write-Host "Windows Universal Package Manager (upm)"
-    Write-Host "Usage: .\upm.ps1 <action> [package] [-q] [-y]"
+    Write-Host "Usage: upm.ps1 <action> [package] [-q] [-y]"
     Write-Host "Actions:"
     Write-Host "  install <package>  - Install a package"
     Write-Host "  remove <package>   - Remove a package"
