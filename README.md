@@ -12,7 +12,7 @@ and it will run ```pacman -S neofetch```
 simple!
 
 no more trying the detect the package manager!!
-## alright, shut up and take my money. how do i install it?
+## how do i install it?
 ```
 cd ~
 git clone https://github.com/sctech-tr/upm.git
