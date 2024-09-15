@@ -1,4 +1,6 @@
 # upm
+<img src="https://raw.githubusercontent.com/sctech-tr/upm/main/upm.png" width="250" height="250">
+
 tired of detecting the package manager? use upm.
 ## what is upm??
 upm detects your primary package manager and uses the proper command to do the action.
