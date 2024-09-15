@@ -19,29 +19,22 @@ all commands are below:
 ### windows:
 ```
 Universal Package Manager (upm)
-Usage: upm.ps1 <action> [package] [-q] [-y]
+Usage: upm.ps1 <action> [package]
 Actions:
   install <package>  - Install a package
   remove <package>   - Remove a package
   update <package>   - Update a specific package
   upgrade            - Upgrade all packages
-Options:
-  -q                 - Quiet mode (reduce output)
-  -y                 - Automatically answer yes to prompts
 ```
 ### linux and macos:
 ```
 Universal Package Manager (upm)
-Usage: upm <action> [package] [-q] [-y]
+Usage: upm <action> [package]
 Actions:
   install <package>  - Install a package"
   remove <package>   - Remove a package"
   update <package>   - Update a specific package"
   upgrade            - Upgrade all packages"
-Options:
-  -h, --help         - Show this help message"
-  -q                 - Quiet mode (reduce output)"
-  -y                 - Automatically answer yes to prompts"
 ```
 ## how do i install it?
 ### linux and macos:
