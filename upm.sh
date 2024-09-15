@@ -14,9 +14,7 @@ show_help() {
     echo "  update <package>   - Update a specific package"
     echo "  upgrade            - Upgrade all packages"
     echo "Options:"
-    echo "  -h, --help         - Show this help message"
-    echo "  -q                 - Quiet mode (reduce output)"
-    echo "  -y                 - Automatically answer yes to prompts"
+    echo "  -h,                - Show this help message"
     exit 0
 }
 
@@ -85,72 +83,50 @@ run_command() {
     local pm="$1"
     local action="$2"
     local package="$3"
-    local quiet="$4"
-    local yes="$5"
-
-    quiet_flag=""
-    yes_flag=""
-
-    if [ "$quiet" = true ]; then
-        case "$pm" in
-            apt|dnf|yum|zypper|apk|pkg) quiet_flag="-q" ;;
-            pacman) quiet_flag="--quiet" ;;
-            brew|port|emerge|xbps|nix|snap|flatpak) quiet_flag="" ;;  # These package managers don't have a standard quiet flag
-        esac
-    fi
-
-    if [ "$yes" = true ]; then
-        case "$pm" in
-            apt|dnf|yum|zypper) yes_flag="-y" ;;
-            pacman) yes_flag="--noconfirm" ;;
-            apk) yes_flag="--no-interactive" ;;
-            brew|port|pkg|emerge|xbps|nix|snap|flatpak) yes_flag="" ;;  # These package managers don't have a standard yes flag
-        esac
-    fi
 
     case "$pm" in
         apt)
             case "$action" in
-                install) sudo apt $quiet_flag $yes_flag install "$package" ;;
-                remove) sudo apt $quiet_flag $yes_flag remove "$package" ;;
-                update) sudo apt $quiet_flag update && sudo apt $quiet_flag $yes_flag upgrade "$package" ;;
-                upgrade) sudo apt $quiet_flag update && sudo apt $quiet_flag $yes_flag upgrade ;;
+                install) sudo apt install "$package" ;;
+                remove) sudo apt remove "$package" ;;
+                update) sudo apt update && sudo apt upgrade "$package" ;;
+                upgrade) sudo apt update && sudo apt upgrade ;;
                 *) echo "Error: Invalid action for apt."; exit 1 ;;
             esac
             ;;
         dnf|yum)
             case "$action" in
-                install) sudo $pm $quiet_flag $yes_flag install "$package" ;;
-                remove) sudo $pm $quiet_flag $yes_flag remove "$package" ;;
-                update) sudo $pm $quiet_flag $yes_flag update "$package" ;;
-                upgrade) sudo $pm $quiet_flag $yes_flag upgrade ;;
+                install) sudo $pm install "$package" ;;
+                remove) sudo $pm remove "$package" ;;
+                update) sudo $pm update "$package" ;;
+                upgrade) sudo $pm upgrade ;;
                 *) echo "Error: Invalid action for $pm."; exit 1 ;;
             esac
             ;;
         pacman)
             case "$action" in
-                install) sudo pacman $quiet_flag $yes_flag -S "$package" ;;
-                remove) sudo pacman $quiet_flag $yes_flag -R "$package" ;;
-                update) sudo pacman $quiet_flag $yes_flag -Syu "$package" ;;
-                upgrade) sudo pacman $quiet_flag $yes_flag -Syu ;;
+                install) sudo pacman -S "$package" ;;
+                remove) sudo pacman -R "$package" ;;
+                update) sudo pacman -Syu "$package" ;;
+                upgrade) sudo pacman -Syu ;;
                 *) echo "Error: Invalid action for pacman."; exit 1 ;;
             esac
             ;;
         zypper)
             case "$action" in
-                install) sudo zypper $quiet_flag $yes_flag install "$package" ;;
-                remove) sudo zypper $quiet_flag $yes_flag remove "$package" ;;
-                update) sudo zypper $quiet_flag $yes_flag update "$package" ;;
-                upgrade) sudo zypper $quiet_flag $yes_flag upgrade ;;
+                install) sudo zypper install "$package" ;;
+                remove) sudo zypper remove "$package" ;;
+                update) sudo zypper update "$package" ;;
+                upgrade) sudo zypper upgrade ;;
                 *) echo "Error: Invalid action for zypper."; exit 1 ;;
             esac
             ;;
         apk)
             case "$action" in
-                install) sudo apk $quiet_flag $yes_flag add "$package" ;;
-                remove) sudo apk $quiet_flag $yes_flag del "$package" ;;
-                update) sudo apk $quiet_flag update && sudo apk $quiet_flag $yes_flag upgrade "$package" ;;
-                upgrade) sudo apk $quiet_flag update && sudo apk $quiet_flag $yes_flag upgrade ;;
+                install) sudo apk add "$package" ;;
+                remove) sudo apk del "$package" ;;
+                update) sudo apk update && sudo apk   upgrade "$package" ;;
+                upgrade) sudo apk update && sudo apk   upgrade ;;
                 *) echo "Error: Invalid action for apk."; exit 1 ;;
             esac
             ;;
@@ -174,10 +150,10 @@ run_command() {
             ;;
         pkg)
             case "$action" in
-                install) sudo pkg $quiet_flag install "$package" ;;
-                remove) sudo pkg $quiet_flag delete "$package" ;;
-                update) sudo pkg $quiet_flag update && sudo pkg $quiet_flag upgrade "$package" ;;
-                upgrade) sudo pkg $quiet_flag update && sudo pkg $quiet_flag upgrade ;;
+                install) sudo pkg install "$package" ;;
+                remove) sudo pkg delete "$package" ;;
+                update) sudo pkg update && sudo pkg upgrade "$package" ;;
+                upgrade) sudo pkg update && sudo pkg upgrade ;;
                 *) echo "Error: Invalid action for pkg."; exit 1 ;;
             esac
             ;;
@@ -236,20 +212,11 @@ run_command() {
 # Main script
 check_version
 
-quiet=false
-yes=false
-
 # Parse command line options
-while getopts ":hqy" opt; do
+while getopts ":h" opt; do
     case ${opt} in
         h )
             show_help
-            ;;
-        q )
-            quiet=true
-            ;;
-        y )
-            yes=true
             ;;
         \? )
             echo "Invalid Option: -$OPTARG" 1>&2
@@ -267,7 +234,7 @@ action="$1"
 package="$2"
 
 if [[ "$action" != "install" && "$action" != "remove" && "$action" != "update" && "$action" != "upgrade" ]]; then
-    echo "Error: Invalid action. Use -h or --help for usage information."
+    echo "Error: Invalid action. Use -h for usage information."
     exit 1
 fi
 
@@ -277,4 +244,4 @@ if [[ "$action" != "upgrade" && -z "$package" ]]; then
 fi
 
 pm=$(detect_package_manager)
-run_command "$pm" "$action" "$package" "$quiet" "$yes"
+run_command "$pm" "$action" "$package"
