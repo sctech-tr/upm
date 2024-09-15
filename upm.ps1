@@ -1,5 +1,5 @@
 # Universal Package Manager (upm)
-# Usage: upm.ps1 <action> <package> [-q] [-y]
+# Usage: upm.ps1 <action> <package>
 # Actions: install, remove, update, upgrade
 
 # Import configuration
