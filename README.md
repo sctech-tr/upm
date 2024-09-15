@@ -14,19 +14,45 @@ and it will run ```pacman -S neofetch```
 simple!
 
 no more trying the detect the package manager!!
-## how do i install it?
+
+all commands are below:
+### windows:
 ```
-cd ~
-git clone https://github.com/sctech-tr/upm.git
-cd upm
-sudo make install
+Universal Package Manager (upm)
+Usage: upm.ps1 <action> [package] [-q] [-y]
+Actions:
+  install <package>  - Install a package
+  remove <package>   - Remove a package
+  update <package>   - Update a specific package
+  upgrade            - Upgrade all packages
+Options:
+  -q                 - Quiet mode (reduce output)
+  -y                 - Automatically answer yes to prompts
+```
+### linux and macos:
+```
+Universal Package Manager (upm)
+Usage: upm <action> [package] [-q] [-y]
+Actions:
+  install <package>  - Install a package"
+  remove <package>   - Remove a package"
+  update <package>   - Update a specific package"
+  upgrade            - Upgrade all packages"
+Options:
+  -h, --help         - Show this help message"
+  -q                 - Quiet mode (reduce output)"
+  -y                 - Automatically answer yes to prompts"
+```
+## how do i install it?
+### linux and macos:
+```
+wget -qO- https://raw.githubusercontent.com/sctech-tr/upm/main/install.sh | sh
+```
+### windows:
+```
+@echo off & powershell -Command "(New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/sctech-tr/upm/main/install.bat', 'install-upm.bat')" & runas /user:Administrator "cmd /c install-upm.bat"
 ```
 ## how do i update it?
-```
-rm -rf ~/upm
-git clone https://github.com/sctech-tr/upm.git
-cd upm
-sudo make install
-```
+run the commands above depending on your os.
 ## why it isn't in the official package manager repositories?
-there's no point
+there's no point to that
