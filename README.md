@@ -50,7 +50,10 @@ wget -qO- https://raw.githubusercontent.com/sctech-tr/upm/main/install.sh | sh
 ```
 ### windows:
 ```
-@echo off & powershell -Command "(New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/sctech-tr/upm/main/install.bat', 'install-upm.bat')" & runas /user:Administrator "cmd /c install-upm.bat"
+@echo off
+powershell -Command "(New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/sctech-tr/upm/main/install.bat', 'install-upm.bat')"
+runas /user:Administrator "powershell -Command Set-ExecutionPolicy RemoteSigned"
+runas /user:Administrator "cmd /c install-upm.bat"
 ```
 ## how do i update it?
 run the commands above depending on your os.
