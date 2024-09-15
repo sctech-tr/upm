@@ -1,8 +1,6 @@
 @{
     winget = @{
         Command = "winget"
-        QuietFlag = "--silent"
-        YesFlag = ""  # winget doesn't have a specific "yes" flag
         Actions = @{
             install = "install $package"
             remove = "uninstall $package"
@@ -12,8 +10,6 @@
     }
     chocolatey = @{
         Command = "choco"
-        QuietFlag = "-q"
-        YesFlag = "-y"
         Actions = @{
             install = "install $package"
             remove = "uninstall $package"
@@ -23,8 +19,6 @@
     }
     scoop = @{
         Command = "scoop"
-        QuietFlag = "-q"
-        YesFlag = ""  # scoop doesn't have a specific "yes" flag
         Actions = @{
             install = "install $package"
             remove = "uninstall $package"
@@ -32,5 +26,4 @@
             upgrade = "update *"
         }
     }
-    # Add more package managers here as needed
 }
