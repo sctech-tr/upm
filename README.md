@@ -1,3 +1,4 @@
+*not to be confused with <a href="https://github.com/replit/upm">replit/upm</a>*
 # upm
 <img src="https://raw.githubusercontent.com/sctech-tr/upm/main/upm.png" width="250" height="250">
 
