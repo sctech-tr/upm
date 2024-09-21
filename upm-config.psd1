@@ -6,6 +6,7 @@
             remove = "uninstall $package"
             update = "upgrade $package"
             upgrade = "upgrade --all"
+            search = "search $package"
         }
     }
     chocolatey = @{
@@ -15,6 +16,7 @@
             remove = "uninstall $package"
             update = "upgrade $package"
             upgrade = "upgrade all"
+            search = "search $package"
         }
     }
     scoop = @{
@@ -24,6 +26,7 @@
             remove = "uninstall $package"
             update = "update $package"
             upgrade = "update *"
+            search = "search $package"
         }
     }
 }
