@@ -4,32 +4,27 @@
 
 tired of detecting the package manager? use upm.
 ## what is upm??
-upm detects your primary package manager and uses the proper command to do the action.
-
-for example, if you use arch (btw):
-
-you can ```sudo upm install neofetch```
-
-and it will run ```pacman -S neofetch```
-
-simple!
-
-no more trying the detect the package manager!!
+upm detects your primary package manager and uses the proper command to do the action.  
+for example, if you use arch (btw):  
+you can ```sudo upm install neofetch```  
+and it will run ```pacman -S neofetch```  
+simple!  
+no more trying the detect the package manager!!  
 
 all commands are below:
 ### windows:
 Usage: upm.ps1 <action> <package(s)>  
 Actions:  
-  install <package(s)>  - Install one or more package(s)
-  remove <package(s)>   - Remove one or more package(s)
-  update <package(s)>   - Update one or more specific package(s)
+  install <package(s)>  - Install one or more package(s)  
+  remove <package(s)>   - Remove one or more package(s)  
+  update <package(s)>   - Update one or more specific package(s)  
   upgrade               - Upgrade all packages  
 ### linux and macos:
 Usage: upm <action> <package(s)>  
 Actions:  
-  install <package(s)>  - Install one or more package(s) 
-  remove <package(s)>   - Remove one or more package(s)
-  update <package(s)>   - Update one or more specific package(s)
+  install <package(s)>  - Install one or more package(s)  
+  remove <package(s)>   - Remove one or more package(s)  
+  update <package(s)>   - Update one or more specific package(s)  
   upgrade               - Upgrade all packages  
 ## how do i install it?
 ### linux and macos:
