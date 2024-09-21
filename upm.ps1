@@ -1,6 +1,6 @@
 # Universal Package Manager (upm)
-# Usage: upm.ps1 <action> <package>
-# Actions: install, remove, update, upgrade
+# Usage: upm.ps1 <action> <package(s)>
+# Actions: install, remove, update, upgrade, search
 
 # Import configuration
 $configPath = Join-Path $PSScriptRoot "upm-config.psd1"
@@ -8,12 +8,13 @@ $config = Import-PowerShellDataFile -Path $configPath
 
 function Show-Help {
     Write-Host "Windows Universal Package Manager (upm)"
-    Write-Host "Usage: upm.ps1 <action> [package] [-q] [-y]"
+    Write-Host "Usage: upm.ps1 <action> [package(s)] [-q] [-y]"
     Write-Host "Actions:"
-    Write-Host "  install <package>  - Install a package"
-    Write-Host "  remove <package>   - Remove a package"
-    Write-Host "  update <package>   - Update a specific package"
-    Write-Host "  upgrade            - Upgrade all packages"
+    Write-Host "  install <package(s)>  - Install one or more packages"
+    Write-Host "  remove <package(s)>   - Remove one or more packages"
+    Write-Host "  update <package(s)>   - Update one or more specific packages"
+    Write-Host "  upgrade               - Upgrade all packages"
+    Write-Host "  search <package>      - Search for a package"
     exit
 }
 
@@ -58,7 +59,7 @@ function Run-Command {
     param (
         [string]$PackageManager,
         [string]$Action,
-        [string]$Package,
+        [string[]]$Packages,
     )
 
     $pmConfig = $config[$PackageManager]
@@ -69,21 +70,23 @@ function Run-Command {
         exit 1
     }
 
-    $cmd = $cmdTemplate -replace '\$package', $Package
-    $cmd = "$($pmConfig.Command) $cmd $quietFlag $yesFlag"
+    foreach ($Package in $Packages) {
+        $cmd = $cmdTemplate -replace '\$package', $Package
+        $cmd = "$($pmConfig.Command) $cmd $quietFlag $yesFlag"
 
-    Write-Host "Executing: $cmd"
-    Invoke-Expression $cmd
+        Write-Host "Executing: $cmd"
+        Invoke-Expression $cmd
+    }
 }
 
 # Parse command line arguments
 param(
     [Parameter(Position=0, Mandatory=$true)]
-    [ValidateSet("install", "remove", "update", "upgrade")]
+    [ValidateSet("install", "remove", "update", "upgrade", "search")]
     [string]$Action,
 
     [Parameter(Position=1)]
-    [string]$Package,
+    [string[]]$Packages,
 )
 
 # Version check
@@ -93,7 +96,7 @@ if (-not $Action) {
     Show-Help
 }
 
-if ($Action -ne "upgrade" -and -not $Package) {
+if ($Action -ne "upgrade" -and -not $Packages) {
     Write-Error "Error: Package name is required for $Action action."
     exit 1
 }
@@ -104,4 +107,4 @@ if (-not $pm) {
     exit 1
 }
 
-Run-Command -PackageManager $pm -Action $Action -Package $Package
+Run-Command -PackageManager $pm -Action $Action -Packages $Packages
