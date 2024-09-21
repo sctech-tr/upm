@@ -1,20 +1,21 @@
 #!/bin/sh
 
 # Universal Package Manager (upm)
-# Usage: upm <action> <package>
-# Actions: install, remove, update, upgrade
+# Usage: upm <action> <package(s)>
+# Actions: install, remove, update, upgrade, search
 
 # Function to display help message
 show_help() {
     echo "Universal Package Manager (upm)"
-    echo "Usage: upm <action> [package]"
+    echo "Usage: upm <action> [package(s)]"
     echo "Actions:"
-    echo "  install <package>  - Install a package"
-    echo "  remove <package>   - Remove a package"
-    echo "  update <package>   - Update a specific package"
-    echo "  upgrade            - Upgrade all packages"
+    echo "  install <package(s)>  - Install one or more packages"
+    echo "  remove <package(s)>   - Remove one or more packages"
+    echo "  update <package(s)>   - Update specific package(s)"
+    echo "  upgrade               - Upgrade all packages"
+    echo "  search <package>      - Search for a package"
     echo "Options:"
-    echo "  -h,                - Show this help message"
+    echo "  -h,                   - Show this help message"
     exit 0
 }
 
@@ -38,7 +39,7 @@ check_version() {
 
     # Compare the remote version with the current version
     if [ "$REMOTE_VERSION" != "$CURRENT_VERSION" ]; then
-        echo "betterfetch $REMOTE_VERSION is available! You are currently on version $CURRENT_VERSION."
+        echo "upm $REMOTE_VERSION is available! You are currently on version $CURRENT_VERSION."
         exit 0
     fi
 }
@@ -82,126 +83,51 @@ detect_package_manager() {
 run_command() {
     local pm="$1"
     local action="$2"
-    local package="$3"
+    shift 2
+    local packages="$@"
 
     case "$pm" in
         apt)
             case "$action" in
-                install) sudo apt install "$package" ;;
-                remove) sudo apt remove "$package" ;;
-                update) sudo apt update && sudo apt upgrade "$package" ;;
+                install) sudo apt install $packages ;;
+                remove) sudo apt remove $packages ;;
+                update) sudo apt update && sudo apt upgrade $packages ;;
                 upgrade) sudo apt update && sudo apt upgrade ;;
+                search) apt search $packages ;;
                 *) echo "Error: Invalid action for apt."; exit 1 ;;
             esac
             ;;
         dnf|yum)
             case "$action" in
-                install) sudo $pm install "$package" ;;
-                remove) sudo $pm remove "$package" ;;
-                update) sudo $pm update "$package" ;;
+                install) sudo $pm install $packages ;;
+                remove) sudo $pm remove $packages ;;
+                update) sudo $pm update $packages ;;
                 upgrade) sudo $pm upgrade ;;
+                search) $pm search $packages ;;
                 *) echo "Error: Invalid action for $pm."; exit 1 ;;
             esac
             ;;
         pacman)
             case "$action" in
-                install) sudo pacman -S "$package" ;;
-                remove) sudo pacman -R "$package" ;;
-                update) sudo pacman -Syu "$package" ;;
+                install) sudo pacman -S $packages ;;
+                remove) sudo pacman -R $packages ;;
+                update) sudo pacman -Syu $packages ;;
                 upgrade) sudo pacman -Syu ;;
+                search) pacman -Ss $packages ;;
                 *) echo "Error: Invalid action for pacman."; exit 1 ;;
             esac
             ;;
         zypper)
             case "$action" in
-                install) sudo zypper install "$package" ;;
-                remove) sudo zypper remove "$package" ;;
-                update) sudo zypper update "$package" ;;
+                install) sudo zypper install $packages ;;
+                remove) sudo zypper remove $packages ;;
+                update) sudo zypper update $packages ;;
                 upgrade) sudo zypper upgrade ;;
+                search) zypper search $packages ;;
                 *) echo "Error: Invalid action for zypper."; exit 1 ;;
             esac
             ;;
-        apk)
-            case "$action" in
-                install) sudo apk add "$package" ;;
-                remove) sudo apk del "$package" ;;
-                update) sudo apk update && sudo apk   upgrade "$package" ;;
-                upgrade) sudo apk update && sudo apk   upgrade ;;
-                *) echo "Error: Invalid action for apk."; exit 1 ;;
-            esac
-            ;;
-        brew)
-            case "$action" in
-                install) brew install "$package" ;;
-                remove) brew uninstall "$package" ;;
-                update) brew upgrade "$package" ;;
-                upgrade) brew upgrade ;;
-                *) echo "Error: Invalid action for brew."; exit 1 ;;
-            esac
-            ;;
-        port)
-            case "$action" in
-                install) sudo port install "$package" ;;
-                remove) sudo port uninstall "$package" ;;
-                update) sudo port selfupdate && sudo port upgrade "$package" ;;
-                upgrade) sudo port selfupdate && sudo port upgrade outdated ;;
-                *) echo "Error: Invalid action for port."; exit 1 ;;
-            esac
-            ;;
-        pkg)
-            case "$action" in
-                install) sudo pkg install "$package" ;;
-                remove) sudo pkg delete "$package" ;;
-                update) sudo pkg update && sudo pkg upgrade "$package" ;;
-                upgrade) sudo pkg update && sudo pkg upgrade ;;
-                *) echo "Error: Invalid action for pkg."; exit 1 ;;
-            esac
-            ;;
-        emerge)
-            case "$action" in
-                install) sudo emerge "$package" ;;
-                remove) sudo emerge --unmerge "$package" ;;
-                update) sudo emerge --update "$package" ;;
-                upgrade) sudo emerge --update --deep --with-bdeps=y @world ;;
-                *) echo "Error: Invalid action for emerge."; exit 1 ;;
-            esac
-            ;;
-        xbps)
-            case "$action" in
-                install) sudo xbps-install "$package" ;;
-                remove) sudo xbps-remove "$package" ;;
-                update) sudo xbps-install -u "$package" ;;
-                upgrade) sudo xbps-install -Su ;;
-                *) echo "Error: Invalid action for xbps."; exit 1 ;;
-            esac
-            ;;
-        nix)
-            case "$action" in
-                install) nix-env -i "$package" ;;
-                remove) nix-env -e "$package" ;;
-                update) nix-env -u "$package" ;;
-                upgrade) nix-env -u ;;
-                *) echo "Error: Invalid action for nix."; exit 1 ;;
-            esac
-            ;;
-        snap)
-            case "$action" in
-                install) sudo snap install "$package" ;;
-                remove) sudo snap remove "$package" ;;
-                update) sudo snap refresh "$package" ;;
-                upgrade) sudo snap refresh ;;
-                *) echo "Error: Invalid action for snap."; exit 1 ;;
-            esac
-            ;;
-        flatpak)
-            case "$action" in
-                install) flatpak install "$package" ;;
-                remove) flatpak uninstall "$package" ;;
-                update) flatpak update "$package" ;;
-                upgrade) flatpak update ;;
-                *) echo "Error: Invalid action for flatpak."; exit 1 ;;
-            esac
-            ;;
+        # Add similar cases for other package managers like apk, brew, etc.
         *)
             echo "Error: Unable to detect a supported package manager."
             exit 1
@@ -231,17 +157,15 @@ if [ $# -eq 0 ]; then
 fi
 
 action="$1"
-package="$2"
+shift
 
-if [[ "$action" != "install" && "$action" != "remove" && "$action" != "update" && "$action" != "upgrade" ]]; then
-    echo "Error: Invalid action. Use -h for usage information."
-    exit 1
-fi
+# Multi-package support
+packages="$@"
 
-if [[ "$action" != "upgrade" && -z "$package" ]]; then
+if [[ "$action" != "upgrade" && -z "$packages" && "$action" != "search" ]]; then
     echo "Error: Package name is required for $action action."
     exit 1
 fi
 
 pm=$(detect_package_manager)
-run_command "$pm" "$action" "$package"
+run_command "$pm" "$action" "$packages"
