@@ -127,7 +127,87 @@ run_command() {
                 *) echo "Error: Invalid action for zypper."; exit 1 ;;
             esac
             ;;
-        # Add similar cases for other package managers like apk, brew, etc.
+        apk)
+            case "$action" in
+                install) sudo apk add $packages ;;
+                remove) sudo apk del $packages ;;
+                update) sudo apk update && sudo apk   upgrade $packages ;;
+                upgrade) sudo apk update && sudo apk   upgrade ;;
+                *) echo "Error: Invalid action for apk."; exit 1 ;;
+            esac
+            ;;
+        brew)
+            case "$action" in
+                install) brew install $packages ;;
+                remove) brew uninstall $packages ;;
+                update) brew upgrade $packages ;;
+                upgrade) brew upgrade ;;
+                *) echo "Error: Invalid action for brew."; exit 1 ;;
+            esac
+            ;;
+        port)
+            case "$action" in
+                install) sudo port install $packages ;;
+                remove) sudo port uninstall $packages ;;
+                update) sudo port selfupdate && sudo port upgrade $packages ;;
+                upgrade) sudo port selfupdate && sudo port upgrade outdated ;;
+                *) echo "Error: Invalid action for port."; exit 1 ;;
+            esac
+            ;;
+        pkg)
+            case "$action" in
+                install) sudo pkg install $packages ;;
+                remove) sudo pkg delete $packages ;;
+                update) sudo pkg update && sudo pkg upgrade $packages ;;
+                upgrade) sudo pkg update && sudo pkg upgrade ;;
+                *) echo "Error: Invalid action for pkg."; exit 1 ;;
+            esac
+            ;;
+        emerge)
+            case "$action" in
+                install) sudo emerge $packages ;;
+                remove) sudo emerge --unmerge $packages ;;
+                update) sudo emerge --update $packages ;;
+                upgrade) sudo emerge --update --deep --with-bdeps=y @world ;;
+                *) echo "Error: Invalid action for emerge."; exit 1 ;;
+            esac
+            ;;
+        xbps)
+            case "$action" in
+                install) sudo xbps-install $packages ;;
+                remove) sudo xbps-remove $packages ;;
+                update) sudo xbps-install -u $packages ;;
+                upgrade) sudo xbps-install -Su ;;
+                *) echo "Error: Invalid action for xbps."; exit 1 ;;
+            esac
+            ;;
+        nix)
+            case "$action" in
+                install) nix-env -i $packages ;;
+                remove) nix-env -e $packages ;;
+                update) nix-env -u $packages ;;
+                upgrade) nix-env -u ;;
+                *) echo "Error: Invalid action for nix."; exit 1 ;;
+            esac
+            ;;
+        snap)
+            case "$action" in
+                install) sudo snap install $packages ;;
+                remove) sudo snap remove $packages ;;
+                update) sudo snap refresh $packages ;;
+                upgrade) sudo snap refresh ;;
+                *) echo "Error: Invalid action for snap."; exit 1 ;;
+            esac
+            ;;
+        flatpak)
+            case "$action" in
+                install) flatpak install $packages ;;
+                remove) flatpak uninstall $packages ;;
+                update) flatpak update $packages ;;
+                upgrade) flatpak update ;;
+                *) echo "Error: Invalid action for flatpak."; exit 1 ;;
+            esac
+            ;;
         *)
             echo "Error: Unable to detect a supported package manager."
             exit 1
